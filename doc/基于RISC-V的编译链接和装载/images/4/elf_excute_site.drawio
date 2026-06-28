@@ -1,0 +1,63 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.1 Chrome/142.0.7444.265 Electron/39.8.0 Safari/537.36" version="29.6.1">
+  <diagram name="第 1 页" id="RWjlj91MNJdZlXetu1bt">
+    <mxGraphModel dx="1426" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Ia4nPaxcrLtGv2v1LKS1-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#36393d;" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;Unused&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="210" x="213" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#000000;" value="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Read-Only segment&lt;/span&gt;&lt;/div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;只读区&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="210" x="213" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#99ff99, #203a00);strokeColor=#36393d;" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;.data 节&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="210" x="518" y="541" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#99ff99, #203a00);strokeColor=#36393d;" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;.bss 节&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="210" x="518" y="508" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#99ff99, #203a00);strokeColor=#000000;" value="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Read/Write segment&lt;/span&gt;&lt;/div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;可读可写区&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="210" x="213" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#000000;" value="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Runtime heap&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;(Create at runtime by malloc)&lt;/span&gt;&lt;/div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;堆区&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="210" x="213" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#000000;" value="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;User Stack&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;(Create at runtime)&lt;/span&gt;&lt;/div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;栈区&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="210" x="213" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#000000;" value="&lt;div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Kernel virtual memory&lt;/span&gt;&lt;/div&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;内核区&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="210" x="213" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="220" width="210" x="213" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#000000;" value="Memory mapped region for shared libraries&lt;div&gt;共享动态库&lt;/div&gt;" vertex="1">
+          <mxGeometry height="57" width="210" x="213" y="293" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-11" parent="1" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;" value="" vertex="1">
+          <mxGeometry height="55" width="20" x="473" y="508" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;.text 节&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="210" x="518" y="614" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;span style=&quot;font-size: 14px;&quot;&gt;.rodata 节&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="210" x="518" y="575" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-14" parent="1" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;" value="" vertex="1">
+          <mxGeometry height="55" width="20" x="473" y="578" as="geometry" />
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-15" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="130" y="670" as="sourcePoint" />
+            <mxPoint x="130" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9kmoBxKPQ7wtBoLxvzj8-16" connectable="0" parent="9kmoBxKPQ7wtBoLxvzj8-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="地址从低到高" vertex="1">
+          <mxGeometry relative="1" x="0.0133" y="3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

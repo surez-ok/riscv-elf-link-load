@@ -1,0 +1,154 @@
+
+dyn_got_plt.elf:     file format elf64-littleriscv
+
+
+Disassembly of section .plt:
+
+0000000000000670 <.plt>:
+ 670:	00002397          	auipc	t2,0x2
+ 674:	41c30333          	sub	t1,t1,t3
+ 678:	9803be03          	ld	t3,-1664(t2) # 1ff0 <.got.plt>
+ 67c:	fd430313          	addi	t1,t1,-44
+ 680:	98038293          	addi	t0,t2,-1664
+ 684:	00135313          	srli	t1,t1,0x1
+ 688:	0082b283          	ld	t0,8(t0)
+ 68c:	000e0067          	jalr	zero,0(t3)
+
+0000000000000690 <__libc_start_main@plt>:
+ 690:	00002e17          	auipc	t3,0x2
+ 694:	970e3e03          	ld	t3,-1680(t3) # 2000 <__libc_start_main@GLIBC_2.34>
+ 698:	000e0367          	jalr	t1,0(t3)
+ 69c:	00000013          	addi	zero,zero,0
+
+00000000000006a0 <add@plt>:
+ 6a0:	00002e17          	auipc	t3,0x2
+ 6a4:	968e3e03          	ld	t3,-1688(t3) # 2008 <add@Base>
+ 6a8:	000e0367          	jalr	t1,0(t3)
+ 6ac:	00000013          	addi	zero,zero,0
+
+00000000000006b0 <printf@plt>:
+ 6b0:	00002e17          	auipc	t3,0x2
+ 6b4:	960e3e03          	ld	t3,-1696(t3) # 2010 <printf@GLIBC_2.27>
+ 6b8:	000e0367          	jalr	t1,0(t3)
+ 6bc:	00000013          	addi	zero,zero,0
+
+00000000000006c0 <sub@plt>:
+ 6c0:	00002e17          	auipc	t3,0x2
+ 6c4:	958e3e03          	ld	t3,-1704(t3) # 2018 <sub@Base>
+ 6c8:	000e0367          	jalr	t1,0(t3)
+ 6cc:	00000013          	addi	zero,zero,0
+
+Disassembly of section .text:
+
+00000000000006d0 <main>:
+ 6d0:	1101                	c.addi	sp,-32
+ 6d2:	4589                	c.li	a1,2
+ 6d4:	4505                	c.li	a0,1
+ 6d6:	ec06                	c.sdsp	ra,24(sp)
+ 6d8:	e822                	c.sdsp	s0,16(sp)
+ 6da:	e426                	c.sdsp	s1,8(sp)
+ 6dc:	fc5ff0ef          	jal	ra,6a0 <add@plt>
+ 6e0:	4591                	c.li	a1,4
+ 6e2:	450d                	c.li	a0,3
+ 6e4:	fbdff0ef          	jal	ra,6a0 <add@plt>
+ 6e8:	4599                	c.li	a1,6
+ 6ea:	4515                	c.li	a0,5
+ 6ec:	fd5ff0ef          	jal	ra,6c0 <sub@plt>
+ 6f0:	45a1                	c.li	a1,8
+ 6f2:	451d                	c.li	a0,7
+ 6f4:	fcdff0ef          	jal	ra,6c0 <sub@plt>
+ 6f8:	00002417          	auipc	s0,0x2
+ 6fc:	8f043403          	ld	s0,-1808(s0) # 1fe8 <g_sub@Base>
+ 700:	00002497          	auipc	s1,0x2
+ 704:	8c84b483          	ld	s1,-1848(s1) # 1fc8 <g_sum@Base>
+ 708:	4010                	c.lw	a2,0(s0)
+ 70a:	408c                	c.lw	a1,0(s1)
+ 70c:	00000517          	auipc	a0,0x0
+ 710:	0f450513          	addi	a0,a0,244 # 800 <_IO_stdin_used+0x8>
+ 714:	f9dff0ef          	jal	ra,6b0 <printf@plt>
+ 718:	06400593          	addi	a1,zero,100
+ 71c:	0c800613          	addi	a2,zero,200
+ 720:	00000517          	auipc	a0,0x0
+ 724:	0e050513          	addi	a0,a0,224 # 800 <_IO_stdin_used+0x8>
+ 728:	c08c                	c.sw	a1,0(s1)
+ 72a:	c010                	c.sw	a2,0(s0)
+ 72c:	f85ff0ef          	jal	ra,6b0 <printf@plt>
+ 730:	60e2                	c.ldsp	ra,24(sp)
+ 732:	6442                	c.ldsp	s0,16(sp)
+ 734:	64a2                	c.ldsp	s1,8(sp)
+ 736:	4501                	c.li	a0,0
+ 738:	6105                	c.addi16sp	sp,32
+ 73a:	8082                	c.jr	ra
+
+000000000000073c <_start>:
+ 73c:	022000ef          	jal	ra,75e <load_gp>
+ 740:	87aa                	c.mv	a5,a0
+ 742:	00002517          	auipc	a0,0x2
+ 746:	88e53503          	ld	a0,-1906(a0) # 1fd0 <_GLOBAL_OFFSET_TABLE_+0x18>
+ 74a:	6582                	c.ldsp	a1,0(sp)
+ 74c:	0030                	c.addi4spn	a2,sp,8
+ 74e:	ff017113          	andi	sp,sp,-16
+ 752:	4681                	c.li	a3,0
+ 754:	4701                	c.li	a4,0
+ 756:	880a                	c.mv	a6,sp
+ 758:	f39ff0ef          	jal	ra,690 <__libc_start_main@plt>
+ 75c:	9002                	c.ebreak
+
+000000000000075e <load_gp>:
+ 75e:	00002197          	auipc	gp,0x2
+ 762:	0c218193          	addi	gp,gp,194 # 2820 <__global_pointer$>
+ 766:	8082                	c.jr	ra
+ 768:	0001                	c.addi	zero,0
+
+000000000000076a <deregister_tm_clones>:
+ 76a:	00002517          	auipc	a0,0x2
+ 76e:	8be50513          	addi	a0,a0,-1858 # 2028 <__TMC_END__>
+ 772:	00002797          	auipc	a5,0x2
+ 776:	8b678793          	addi	a5,a5,-1866 # 2028 <__TMC_END__>
+ 77a:	00a78863          	beq	a5,a0,78a <deregister_tm_clones+0x20>
+ 77e:	00002797          	auipc	a5,0x2
+ 782:	8427b783          	ld	a5,-1982(a5) # 1fc0 <_ITM_deregisterTMCloneTable@Base>
+ 786:	c391                	c.beqz	a5,78a <deregister_tm_clones+0x20>
+ 788:	8782                	c.jr	a5
+ 78a:	8082                	c.jr	ra
+
+000000000000078c <register_tm_clones>:
+ 78c:	00002517          	auipc	a0,0x2
+ 790:	89c50513          	addi	a0,a0,-1892 # 2028 <__TMC_END__>
+ 794:	00002597          	auipc	a1,0x2
+ 798:	89458593          	addi	a1,a1,-1900 # 2028 <__TMC_END__>
+ 79c:	8d89                	c.sub	a1,a0
+ 79e:	4035d793          	srai	a5,a1,0x3
+ 7a2:	91fd                	c.srli	a1,0x3f
+ 7a4:	95be                	c.add	a1,a5
+ 7a6:	8585                	c.srai	a1,0x1
+ 7a8:	c599                	c.beqz	a1,7b6 <register_tm_clones+0x2a>
+ 7aa:	00002797          	auipc	a5,0x2
+ 7ae:	8367b783          	ld	a5,-1994(a5) # 1fe0 <_ITM_registerTMCloneTable@Base>
+ 7b2:	c391                	c.beqz	a5,7b6 <register_tm_clones+0x2a>
+ 7b4:	8782                	c.jr	a5
+ 7b6:	8082                	c.jr	ra
+
+00000000000007b8 <__do_global_dtors_aux>:
+ 7b8:	00002797          	auipc	a5,0x2
+ 7bc:	8707c783          	lbu	a5,-1936(a5) # 2028 <__TMC_END__>
+ 7c0:	e79d                	c.bnez	a5,7ee <__do_global_dtors_aux+0x36>
+ 7c2:	1141                	c.addi	sp,-16
+ 7c4:	e406                	c.sdsp	ra,8(sp)
+ 7c6:	00002797          	auipc	a5,0x2
+ 7ca:	8127b783          	ld	a5,-2030(a5) # 1fd8 <__cxa_finalize@GLIBC_2.27>
+ 7ce:	c791                	c.beqz	a5,7da <__do_global_dtors_aux+0x22>
+ 7d0:	00002517          	auipc	a0,0x2
+ 7d4:	85053503          	ld	a0,-1968(a0) # 2020 <__dso_handle>
+ 7d8:	9782                	c.jalr	a5
+ 7da:	f91ff0ef          	jal	ra,76a <deregister_tm_clones>
+ 7de:	60a2                	c.ldsp	ra,8(sp)
+ 7e0:	4785                	c.li	a5,1
+ 7e2:	00002717          	auipc	a4,0x2
+ 7e6:	84f70323          	sb	a5,-1978(a4) # 2028 <__TMC_END__>
+ 7ea:	0141                	c.addi	sp,16
+ 7ec:	8082                	c.jr	ra
+ 7ee:	8082                	c.jr	ra
+
+00000000000007f0 <frame_dummy>:
+ 7f0:	bf71                	c.j	78c <register_tm_clones>
