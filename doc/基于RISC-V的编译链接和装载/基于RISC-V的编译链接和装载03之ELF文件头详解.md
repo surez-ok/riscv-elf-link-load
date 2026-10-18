@@ -14,7 +14,7 @@ $ riscv64-unknown-linux-gnu-readelf -h helloworld.elf
 
 其输出为：
 
-~~~log
+~~~sh
 $ riscv64-unknown-linux-gnu-readelf -h helloworld.elf
 ELF Header:
   Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
@@ -102,13 +102,12 @@ ELF文件头结构成员含义：
 | 13   | e_shnum            | Section Header 项数量                                        |
 | 14   | e_shstrndx         | 节名字符串表索引                                             |
 
-**注意：** RV32文件头结构体成员也与RV64一样，只是数据类型不一样，所以文件头长度也不一样，
+**注意：** RV32文件头结构体成员也与RV64一样，只是数据类型不一样（差异在于上表标出的3个成员数据类型不一样），所以文件头长度也不一样，
 
 * RV32 位 ELF 文件头共52 字节
-
 * RV64 位 ELF 文件头共64 字节
 
-  RV32与RV64  差异在于上表标出的3个成员数据类型不一样。
+
 
 ## 3 ELF文件头的数据结构各字段详解
 
@@ -126,7 +125,7 @@ ELF文件头结构成员含义：
 
 **举例：**
 
-helloword 的前16个字节如下所示：
+`helloworld.elf` 的前16个字节如下所示：
 
 ~~~log
 0x7f, 0x45, 0x4c, 0x46, 0x02, 0x01, 0x01, 0x00,
@@ -157,17 +156,17 @@ helloword 的前16个字节如下所示：
 
 **属于ELF格式的4种文件类型：**
 
-| ELF文件类型              | e_type  | 说明                                                         | 正确的实例                           |
-| :----------------------- | :------ | :----------------------------------------------------------- | :----------------------------------- |
-| 可执行文件（旧式/非PIE） | ET_EXEC | 固定地址加载，不支持ASLR。常见于老旧系统或加了 `-no-pie` 编译的程序。 | 老旧嵌入式固件、特定编译选项下的程序 |
-| 可执行文件（现代/PIE     | ET_DYN  | 支持加载地址随机化的可执行文件。现代Linux默认编译方式。      | `/usr/bin/ls`**、**`/usr/bin/bash 等 |
-| 目标文件                 | ET_REL  | 需要链接重定位。静态库（`.a`）本质是此类文件的集合。         | 编译产生的 `.o` 文件，链接器使用     |
-| 共享库                   | ET_DYN  | 动态链接库。注意：它与 PIE 可执行文件共享同一个 `e_type` 值，系统根据加载方式区分。 | linux下的.so库                       |
-| 核心转储                 | ET_CORE | 进程崩溃时的内存快照。                                       | linux下的core dump                   |
+| ELF文件类型              | e_type  | 说明                                                         | 正确的实例                            |
+| :----------------------- | :------ | :----------------------------------------------------------- | :------------------------------------ |
+| 可执行文件（旧式/非PIE） | ET_EXEC | 固定地址加载，不支持ASLR。常见于老旧系统或加了 `-no-pie` 编译的程序 | 老旧嵌入式固件、特定编译选项下的程序  |
+| 可执行文件（现代/PIE     | ET_DYN  | 支持加载地址随机化的可执行文件。现代Linux默认编译方式        | `/usr/bin/ls`**、**`/usr/bin/bash` 等 |
+| 目标文件                 | ET_REL  | 需要链接重定位。静态库（`.a`）本质是此类文件的集合           | 编译产生的 `.o` 文件，链接器使用      |
+| 共享库                   | ET_DYN  | 动态链接库。注意：它与 PIE 可执行文件共享同一个 `e_type` 值，系统根据加载方式区分 | linux下的.so库                        |
+| 核心转储                 | ET_CORE | 进程崩溃时的内存快照                                         | linux下的core dump                    |
 
-**注意：**
+**注意：**并非静态链接ELF的文件类型一定为`ET_EXEC` ， 动态链接ELF的文件类型一定为`ET_DYN`类型 ，
 
-并非静态链接ELF的文件类型一定为`ET_EXEC` ， 动态链接ELF的文件类型一定为`ET_DYN`类型 ，`ET_EXE`与`ET_DYN`类型的区别在于是否固定加载地址，这由编译时是否开启 `-pie` 决定。
+`ET_EXE`与`ET_DYN`类型的区别在于是否固定加载地址，这由编译时是否开启 `-pie` 决定。
 
 那么加载器是怎么区分静态链接ELF还是动态链接ELF呢？
 
@@ -234,14 +233,14 @@ can't link soft-float modules with double-float modules
 
 这个链接错误 `can't link soft-float modules with double-float modules` 是 RISC-V 开发中非常典型的 **ABI 不匹配** 问题。
 
-在项目中，部分目标文件（`.o`）或静态库（`.a`）在编译时使用的是软浮点（soft-float），而另一部分使用的是双精度硬浮点（double-float）时，链接器就会拒绝将它们合并。所以我们需要找出哪些目标文件是soft-float。
+在项目中，如果部分目标文件（`.o`）或静态库（`.a`）在编译时使用的是软浮点（soft-float），而另一部分使用的是双精度硬浮点（double-float）时，链接器就会拒绝将它们合并。
 
 出现这种问题的可能原因：
 
-1. 编译时是否传入正确的march与mabi
+1. 编译时是否传入正确的`march`与`mabi`
 2. 项目是否没有clean干净，导致有残留的.o文件？ 可以在clean后，查看项目中是否有.o文件
 
-排查方法，使用如下命令：
+定位问题，我们需要找出哪些目标文件是soft-float，排查方法，使用如下命令：
 
 ~~~sh
 $ find . -name "*.o" | xargs riscv64-unknown-linux-gnu-readelf -h 2>/dev/null | grep -E "File:|soft-float"
@@ -294,4 +293,4 @@ Section Header Table 中有多少个节（section），如 `.text`, `.data`, `.s
 **参考：**
 
 1. https://riscv-non-isa.github.io/riscv-elf-psabi-doc/
-1. [RISC-V Binutils工具链03之readelf工具的使用]
+1. [RISC-V Binutils工具链03之readelf工具的使用](https://www.cnblogs.com/sureZ-learning/p/22754648)

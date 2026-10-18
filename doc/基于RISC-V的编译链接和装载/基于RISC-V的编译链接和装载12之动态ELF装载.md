@@ -1,10 +1,10 @@
-# 基于RISC-V的编译链接和装载11之动态ELF装载
+# 基于RISC-V的编译链接和装载12之动态ELF装载
 
 [TOC]
 
-这一章以linux执行`./hello`为例，来跟踪linux执行ELF的过程，下图来自参考1。
+这一章以Linux执行`./hello`为例，来跟踪Linux执行ELF的过程，下图来自参考1。
 
-Linux环境既支持静态链接ELF加载执行，也支持动态链接ELF加载执行。静态ELF与动态ELF的Linux加载流程是基本是一致的，只在少数地方有差异，文中会重点讨论。
+Linux环境既支持静态链接ELF加载执行，也支持动态链接ELF加载执行。静态ELF与动态ELF的Linux加载流程是基本是一致的，只在少数地方有差异，文中会重点标出。
 
 ![](images/12/hello.drawio.png)
 
@@ -12,8 +12,8 @@ Linux环境既支持静态链接ELF加载执行，也支持动态链接ELF加载
 
 静态链接ELF与动态链接ELF对环境的需求：
 
-1. 静态链接ELF可以在裸机环境或者Linux环境装载以及执行
-2. 动态链接ELF一般需要操作系统的支持，因为需要动态链接器以及MMU等支持
+1. 静态链接ELF可以在裸机环境或者Linux环境装载以及执行；
+2. 动态链接ELF一般需要操作系统的支持，因为需要动态链接器以及MMU等支持。
 
 
 
@@ -26,9 +26,9 @@ linux中程序执行的标准流程为：进程创建（fork）+ 程序替换（
 * **进程创建（fork）**：复制进程，为新程序创建独立的执行容器（子进程），并保留父进程的运行环境；
 * **程序替换（execve）**：把新程序的代码及数据装进这个容器，替换进程的代码及数据，让容器执行新程序；
 
-进程通常通过fork系统调用来创造一个新的进程，新的进程通过execve()函数创建新的地址空间，并载入新的程序。
+进程通常通过`fork()`系统调用来创造一个新的进程，新的进程通过`execve()`函数创建新的地址空间，并载入新的程序。
 
-作为对比：Windows 没有 `fork+execve` 分阶段的设计，而是通过 `CreateProcess()` 函数一次性完成 “进程创建 + 程序加载”的步骤
+作为对比：Windows 没有 `fork()+execve()` 分阶段的设计，而是通过 `CreateProcess()` 函数一次性完成 “进程创建 + 程序加载”的步骤
 
 ### 1.1 第1阶段：fork() 创建子进程
 
@@ -76,19 +76,19 @@ linux中程序执行的标准流程为：进程创建（fork）+ 程序替换（
 
 1. 用户态调用 `execve()`：
 
-   子进程执行 execve("./hello", argv, envp)，传入程序路径、参数、环境变量，再次进入内核态；
+   子进程执行 `execve("./hello", argv, envp)`，传入程序路径、参数、环境变量，再次进入内核态；
 
 2. 内核态进入 `sys_execve()`：
 
-   execve()对应的系统调用入口是 sys_execve()；
+   `execve()`对应的系统调用入口是 `sys_execve()`；
 
 3. 核心替换逻辑 `do_execve()`：
 
-   sys_execve() 调用 do_execve()，负责解析程序路径、准备执行环境；
+   `sys_execve()` 调用 `do_execve()`，负责解析程序路径、准备执行环境；
 
 4. 路径与文件处理 `do_execveat()`/`do_execveat_common()`：
-   - do_execve() 调用 do_execveat()（处理路径相关的细节，如相对路径 / 绝对路径）；
-   - 再进入 do_execveat_common()，打开 `./hello` 文件，读取文件头部，准备后续解析；
+   - `do_execve()` 调用 `do_execveat()`（处理路径相关的细节，如相对路径 / 绝对路径）；
+   - 再进入 `do_execveat_common()`，打开 `./hello` 文件，读取文件头部，准备后续解析；
 
 5. 匹配可执行文件处理器 `search_binary_handler()`：
 
@@ -116,9 +116,9 @@ linux中程序执行的标准流程为：进程创建（fork）+ 程序替换（
 
 ## 2 execve() 函数的执行细节
 
-本系列主要关注程序的装载与执行流程，所以这里先不关心进程fork流程，重点关注execve函数的执行流程：
+本系列主要关注程序的装载与执行流程，所以这里先不关心进程fork流程，重点关注 `execve()`函数的执行流程：
 
- execve() 函数的执行流程如下所示：
+ `execve()` 函数的执行流程如下所示：
 
 ~~~c
 用户程序调用 execve()
@@ -150,7 +150,7 @@ start_thread()               // 设置新程序入口（PC = entry point）
 
 Linux 内核的 `binfmt`（binary format）子系统是 “可执行文件加载的总入口”：当调用 `execve()` 执行一个文件时，会调用`search_binary_handler`函数遍历已注册的 `binfmt` 模块，匹配文件的 “魔数”（文件开头的特征字节），然后调用对应模块的加载逻辑，完成程序映射和启动。
 
-简单来说：search_binary_handler会轮询所有注册过的文件格式（如：elf, a.out, flat, script等），调用适合的加载器/解释器。
+简单来说：`search_binary_handler()`会轮询所有注册过的文件格式（如：elf, a.out, flat, script等），调用适合的加载器/解释器。
 
 **binfmt_elf.c：标准 ELF 格式加载器**：
 
@@ -171,7 +171,9 @@ static struct linux_binfmt elf_format = {
 
 
 
-其他支持的格式如下(可以查阅linux kernel源码)：
+**其它支持的格式加载器：**
+
+如下列出其它格式的加载器(可以查阅linux kernel源码)：
 
 | 文件                | 对应格式            | 核心特点                       | 主要场景                                                     |
 | ------------------- | ------------------- | ------------------------------ | ------------------------------------------------------------ |
@@ -435,8 +437,9 @@ int __libc_start_main(...) {
 }
 ~~~
 
-3. 主程序初始化 `__libc_csu_init`
-   `__libc_start_main` 调用 `__libc_csu_init`，`__libc_csu_init` 是 C 启动（C Startup）初始化函数，它负责按顺序执行主程序自身的初始化段：
+
+
+其中`__libc_csu_init` 是 C 启动（C Startup）初始化函数，它负责按顺序执行主程序自身的初始化段：
 
 ```c
 void __libc_csu_init(int argc, char **argv, char **envp) {
@@ -458,7 +461,7 @@ void __libc_csu_init(int argc, char **argv, char **envp) {
 }
 ```
 
-4. main函数执行
+3. main函数执行
 
 完成所有初始化后，`__libc_start_main` 调用用户写的 `main` 函数。
 
@@ -469,7 +472,7 @@ int main(int argc, char **argv, char **envp) {
 }
 ```
 
-5. 程序退出
+4. 程序退出
    当 `main` 函数返回后，`__libc_start_main` 会调用 `exit` 函数，依次执行：
 
 - 调用通过 `atexit` 注册的函数
@@ -706,7 +709,7 @@ _dl_start_user(auxv, ...) {
 
 **step11 – 程序执行** 
 
-这里步骤与静态链接的步骤几乎一致，所以这里不再赘述。
+进入程序入口 `_start`开始执行，这里步骤与静态链接的步骤几乎一致，所以这里不再赘述。
 
 
 
@@ -716,7 +719,7 @@ _dl_start_user(auxv, ...) {
 
 `05_ld_elfloader`在`03_simple_elfloader`基础上加入了对ld.so功能的模拟，通过研究代码，读者可以更深入的理解链接器ld.so的工作。
 
-这两个用例的关系为：
+这两个用例的区别为：
 
 |                   | 03_simple_elfloader | 05_ld_elfloader                  |
 | ----------------- | ------------------- | -------------------------------- |

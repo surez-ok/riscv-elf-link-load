@@ -1,6 +1,8 @@
-# 基于RISC-V的编译链接和装载16之linker overlay
+# 基于RISC-V的编译链接和装载17之linker overlay
 
-Linker Overlay 是一种在内存受限系统（如嵌入式 MCU裸机）中，让多个函数或数据段共享同一块物理内存区域（RAM）的技术，运行时需要开发者手动划分 Overlay 区域，手动调用管理函数。
+[TOC]
+
+`Linker Overlay` 是一种在内存受限系统（如嵌入式 MCU裸机）中，让多个函数或数据段共享同一块物理内存区域（RAM）的技术，运行时需要开发者手动划分 Overlay 区域，手动调用管理函数。
 
 **注意：**Linker Overlay 在MMU出来之前使用比较广泛，现在几乎已经淘汰，在没有MMU的嵌入式场景有一些用武之地，由于Linux 拥有 Swap（交换分区/文件） 和 虚拟内存管理（MMU），所以linux不需要Linker Overlay 技术，下面的介绍都是针对MCU裸机场景。
 
@@ -10,7 +12,7 @@ Linker Overlay 是一种在内存受限系统（如嵌入式 MCU裸机）中，�
 
 ### 1.1 为什么嵌入式 MCU需要 Overlay？
 
-考虑一个场景，嵌入式MCU中，程序比较大，Flash 足够大可以放整个程序，但 SRAM 不足（Flash分普通模式与XIP模式，普通模式不能执行代码，XIP模式可以执行代码但速度很慢），这个时候我们可以考虑使用分时复用RAM技术，也即linker overlay技术。
+考虑一个场景，嵌入式MCU中，程序比较大，Flash 足够大可以放整个程序，但 SRAM 不足（Flash分普通模式与XIP模式，普通模式不能执行代码，XIP模式可以执行代码但速度很慢），这个时候我们可以考虑使用分时复用RAM技术，也即`linker overlay`技术。
 
 下图来源于参考1。
 
@@ -46,13 +48,13 @@ Linker Overlay 就是利用 VMA/LMA 分离，让多个模块“假装”都在�
 
 我们需要区分两种不同复杂度的 Overlay 实现：
 
-**基础 Overlay (Manual Overlay)**
+* **基础 Overlay (Manual Overlay)**
 
 实现方式：依赖链接器脚本（`.ld` 文件）中的 `OVERLAY` 命令来组织代码布局，但运行时的加载和切换完全由开发者手动编码控制。
 
 在这种模式下，开发者必须通过精心设计程序流程，如果A块与B块共享（或重叠）同一块 RAM 区域，那么A块与B块不能发生跨块调用，否则会失败（除非A块B块加载到RAM的不同位置，但这就失去overlay的意义）。开发者需要编写一个小的辅助代码来管理这些模块何时驻留内存而何时应该被替换掉，这个辅助代码就是所谓的覆盖管理器（Overlay Manager），可以参考《程序员的自我修养》6.2.1 覆盖装入这一节。
 
-**高级 Overlay (Automatic/Stub-based Overlay)**
+* **高级 Overlay (Automatic/Stub-based Overlay)**
 
 实现方式：这是[《riscv overlay》 ](https://github.com/riscv-software-src/riscv-overlay/)正在推进的 “**Stub + RT-Engine**”方案。它需要编译器、链接器和运行时库的深度协同。编译器为跨块调用生成特殊的“stub”代码，链接器创建映射表，RT-Engine根据存根的请求来自动加载代码块（RT-Engine 本质上是一个用户态的微型装载器）。也即把手动加载改为RT-Engine加载。
 

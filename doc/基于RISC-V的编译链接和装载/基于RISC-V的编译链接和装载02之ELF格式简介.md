@@ -41,7 +41,7 @@ ELF根据作用不同，可以分为两种视图：链接视图（Linking View�
 
 * 节头表将各个节（.text .rodata .data .bss等节）顺序罗列，这是为编译器以及链接器准备的；
 
-* 而程序头表将各个节重新组织一下（比如将.text .rodata记录在一起叫做代码段，将.data与.bss节索引记录在一起，叫做数据段，并没有改变节的位置或内容，只是组织和记录节索引），一个segment包含一个或者多个section，这样方便装载，这是为加载器准备的
+* 程序头表将各个节重新组织一下（比如将.text .rodata记录在一起叫做代码段，将.data与.bss节索引记录在一起，叫做数据段，并没有改变节的位置或内容，只是组织和记录节索引），一个segment包含一个或者多个section，这样方便装载，这是为加载器准备的
 
 下图来自于参考9（重画了一下），可以更清晰的看到两种不同的视图：
 
@@ -130,7 +130,7 @@ ELF Header:
 
 
 
-**注意：**节（section）和段（segment）经常被混用，这是习惯也有可能是翻译造成的（由于习惯的力量，本系列也可能存在混用），到底是节还是段？这与使用场景有关：编译时多数指的节，加载时多数指的是段，所以要看前后的语义。
+**注意：**节（section）和段（segment）经常被混用，这是习惯也有可能是翻译造成的（虽然尽量避免，由于习惯的力量，本系列文章也可能存在混用），到底是节还是段？这与使用场景有关：编译时多数指的节，加载时多数指的是段，所以要看前后的语义。
 
 ### 3.1 查看节头(section)
 
@@ -239,7 +239,7 @@ Program Headers:
 
 **节和段的对应关系：**
 
-日志中的下半部分（见 Section to Segment mapping: 处），表明了节与段的映射关系：
+日志中的下半部分（见 `Section to Segment mapping:`处），表明了节与段的映射关系：
 
 比如：
 
@@ -258,8 +258,8 @@ Program Headers:
 
 | 段（segment） | 节（section）                                                |
 | ------------- | ------------------------------------------------------------ |
-| text段        | .interp .hash .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r  .rela.plt .plt .text .rodata <br />.eh_frame_hdr.eh_frame .note.ABI-tag |
-| data段        | .preinit_array .init_array .fini_array .dynamic .got .got.plt .bss |
+| 代码段        | .interp .hash .gnu.hash .dynsym .dynstr .gnu.version .gnu.version_r  .rela.plt .plt .text .rodata <br />.eh_frame_hdr.eh_frame .note.ABI-tag |
+| 数据段        | .preinit_array .init_array .fini_array .dynamic .got .got.plt .bss |
 
 
 
@@ -271,6 +271,6 @@ Program Headers:
 5. https://tinylab-1.gitbook.io/cbook/01-chapter1
 6. [史上最小可执行 ELF 文件 - 泰晓科技](https://tinylab.org/the-smallest-elf-executable-hello-world/)
 7. [ELF 之 Program Loading 教學文件, #3: Segment Type 與 Kernel Space Loader](https://www.jollen.org/blog/2007/03/elf_program_loading_3_segment_type.html)
-8. 《RISC-V Binutils工具链01之编译RISC-V 工具链》
-9. 《RISC-V Binutils工具链03之readelf工具的使用》
+8. [RISC-V Binutils工具链01之编译RISC-V 工具链](https://www.cnblogs.com/sureZ-learning/p/22754633)
+9. [RISC-V Binutils工具链03之readelf工具的使用](https://www.cnblogs.com/sureZ-learning/p/22754648)
 10. [(68 封私信 / 80 条消息) 从execve到进程运行：ELF加载的内核实现详解 - 知乎](https://zhuanlan.zhihu.com/p/1961096843653018611)

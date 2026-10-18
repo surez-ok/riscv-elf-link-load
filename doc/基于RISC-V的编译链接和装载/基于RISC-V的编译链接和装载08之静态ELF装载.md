@@ -54,9 +54,9 @@
 
 常见的ELF加载器的设计思路：
 
-首先通过读取ELF文件头来提取出信息，然后使用read系统调用将各个段读取到内存中，并将其存储在ELF Exec结构体的相应成员中。最后，跳转到ELF Exec的entry指向的位置开始执行程序。
+首先通过读取ELF文件头来提取出信息，然后使用`read`系统调用将各个段读取到内存中，并将其存储在`ELF Exec`结构体的相应成员中。最后，跳转到`ELF Exec`的entry指向的位置开始执行程序。
 
-`03_simple_elfloader`用例是一个简单的用户态（userspace）的 RISC-V ELF 加载器，模仿 Linux 内核的 `fs/binfmt_elf.c`。它把 ELF 文件映射进当前进程的地址空间、构造一份 Linux 规范的初始栈（argc/argv/envp/auxv），然后跳转到入口点。动态链接的 ELF 交给 [ld.so](http://ld.so/) 去完成链接，静态 PIE 则直接跳程序入口。
+`03_simple_elfloader`用例是一个简单的用户态（`userspace`）的 RISC-V ELF 加载器，模仿 Linux 内核的 `fs/binfmt_elf.c`。它把 ELF 文件映射进当前进程的地址空间、构造一份 Linux 规范的初始栈（`argc/argv/envp/auxv`），然后跳转到入口点。动态链接的 ELF 交给 [ld.so](http://ld.so/) 去完成链接，静态 PIE 则直接跳程序入口。
 
 详细的编译参数见用例中的README：
 

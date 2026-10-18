@@ -1,6 +1,6 @@
-# 基于RISC-V的编译链接和装载17之库与运行环境
+# 基于RISC-V的编译链接和装载18之库与运行环境
 
-
+[TOC]
 
 ELF 装载完成后，并不会直接跳转到 `main` 函数执行，中间还需经历一系列初始化步骤；而在 `main` 函数正式运行之后，程序的正常运行也依赖基础设施的支持，这部分工作都是运行时库来实现的。
 
@@ -9,7 +9,7 @@ ELF 装载完成后，并不会直接跳转到 `main` 函数执行，中间还�
 * CRT 库（C Runtime）：解决的是“程序如何开始和结束”的问题。它包含的是汇编代码（如 `crt0.S`），负责在 CPU 刚上电或操作系统刚把控制权交给程序时，初始化栈指针（SP）、全局指针（GP）、清零 BSS 段、拷贝 data 段，然后才去调用 `main()` 函数。
 * C 库（C Standard Library）：解决的是“程序如何运行”的问题。它是用 C 或汇编写成的具体功能函数，提供字符串处理、数学计算、标准 I/O 等。
 
-很多嵌入式工程师经常把 CRT 库和 C 标准库（C Standard Library）混在一起，因为在链接时通常只指定一个库选项（比如 -lc）。但在底层编译、链接和程序启动的视角下，它们是两个完全不同的概念，可以这么打比方：如果把"完整的 C 运行环境"想象成一家餐厅，那么 C 库是后厨的厨师和菜谱，负责实现 printf、malloc 等具体业务逻辑；而 CRT 库则是餐厅的开门仪式、服务员和打烊流程——它负责在 CPU 上电时准备好运行环境，并在程序结束时进行清理。
+很多嵌入式工程师经常把 CRT 库和 C 标准库（C Standard Library）混在一起，因为在链接时通常只指定一个库选项（比如 `-lc`）。但在底层编译、链接和程序启动的视角下，它们是两个完全不同的概念，可以这么打比方：如果把"完整的 C 运行环境"想象成一家餐厅，那么 C 库是后厨的厨师和菜谱，负责实现 printf、malloc 等具体业务逻辑；而 CRT 库则是餐厅的开门仪式、服务员和打烊流程——它负责在 CPU 上电时准备好运行环境，并在程序结束时进行清理。
 
 
 
@@ -78,10 +78,10 @@ C 标准库中许多函数（如 printf、malloc）需要操作系统或底层�
 
 在 newlib 中，有 20 个核心桩函数，主要包括： 
 
-- _sbrk：堆扩展
-- _ - _write：写串口/文件_
-- _ - _read：读串口/文件_
-- _ - _close、_fstat、_isatty、_lseek、_open、_kill、_getpid 等
+- `_sbrk`：堆扩展
+- `\_write`：写串口/文件_
+- `\_read`：读串口/文件_
+- `\_close`、`\_fstat`、`\_isatty`、`\_lseek`、`\_open`、`\_kill`、`\_getpid` 等
 
 **注意：**：在 Linux 环境下，glibc 直接通过系统调用（syscall）与内核交互，不需要开发者手动实现这些桩函数。
 
@@ -95,7 +95,7 @@ C 标准库中许多函数（如 printf、malloc）需要操作系统或底层�
 | POSIX 支持                       | 完整                                     | 无                                             |
 | CRT是否要调用`__libc_start_main` | `__libc_start_main` 是“Linux 环境的管家” | 一般不需要调用`__libc_start_main`              |
 | 桩函数                           | 无需手动实现（通过 syscall）             | 需手动实现核心桩函数                           |
-| 工具链命名                       | riscv64-linux-gnu-gcc                    | riscv64-unknown-elf-gcc                        |
+| 工具链命名                       | `riscv64-unknown-linux-gnu-gcc`          | `riscv64-unknown-elf-gcc`                      |
 | 典型应用场景                     | RISC-V 服务器、开发板运行 Linux          | RISC-V MCU、物联网终端                         |
 | 许可证                           | GPL + LGPL                               | BSD/MIT 等宽松许可                             |
 | 浮点 I/O                         | 完整支持                                 | 可裁剪（--disable-newlib-fvwrite-in-streamio） |
